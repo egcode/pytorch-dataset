@@ -69,14 +69,15 @@ if __name__ == '__main__':
 
 
         for ind, (image) in enumerate(data):
-            img = data[ind].permute(1, 2, 0)
+            img = data[ind].permute(1, 2, 0).detach().numpy()
+            img = img[:, :, [2, 1, 0]]
+
             ind_label = target[ind].detach().numpy()
-            image_to_display = img.detach().numpy() 
          
             image_name = "label_" + str(class_names[ind_label]) + "_batch_" + str(batch_idx) + "_image_" + str(ind)
             print("imageName: " + str(image_name))
 
-            write_to_image(image_name, image_to_display)
+            write_to_image(image_name, img)
             image_count += 1
 
     print("\nImages COUNT: " + str(image_count))
