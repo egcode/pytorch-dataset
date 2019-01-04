@@ -7,7 +7,7 @@ from torchvision import datasets, models, transforms
 import os
 import cv2
 from pdb import set_trace as bp
-from PIL import Image, ExifTags
+from PIL import Image
 import imageio
 
 
