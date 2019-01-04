@@ -8,6 +8,7 @@ import os
 import cv2
 from pdb import set_trace as bp
 from PIL import Image, ExifTags
+import imageio
 
 
 if __name__ == '__main__':
@@ -17,13 +18,13 @@ if __name__ == '__main__':
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
         'val': transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
     }
 
@@ -68,16 +69,18 @@ if __name__ == '__main__':
 
         for ind, (image) in enumerate(data):
             img = image.permute(1, 2, 0).detach().numpy()
-            img = img[:, :, [2, 1, 0]] #  OpenCV is in BGR mode
             ind_label = target[ind].detach().numpy()
          
             image_name = "label_" + str(class_names[ind_label]) + "_batch_" + str(batch_idx) + "_image_" + str(ind)
+            image_path = 'out_images/' + image_name + '.jpg'
             print("imageName: " + str(image_name))
 
-            cv2.imwrite('out_images/' + image_name + '.jpg', img*255.0)
+            # # OpenCV style saving
+            # cv2_image = img[:, :, [2, 1, 0]] #  OpenCV is in BGR mode
+            # cv2.imwrite(image_path, cv2_image*255.0)
 
-            # result = Image.fromarray((img * 255).astype(np.uint8))
-            # result.save('out_images/' + image_name + '.jpg')
+            # # imageio style saving
+            imageio.imwrite(image_path, (img * 255.).astype(np.uint8))
 
             image_count += 1
 
