@@ -65,6 +65,7 @@ class FacesDataset(data.Dataset):
         label = self.label_list[index]
         name = self.names_list[index]
 
+        # data = data[[2, 1, 0], :, :] #  OpenCV is in BGR mode
         return data.float(), label, name
 
 
@@ -100,8 +101,8 @@ if __name__ == '__main__':
 
         for (ii, image) in enumerate(data):
 
-            img = image.permute(1, 2, 0).detach().numpy() # CHTO TO TUT NE TAK
-            img = img[:, :, [2, 1, 0]]
+            img = image.permute(1, 2, 0).detach().numpy() 
+            img = img[:, :, [2, 1, 0]] #  OpenCV is in BGR mode
 
             ind_label = label[ii].detach().numpy()
             name = names[ii]
