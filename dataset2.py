@@ -57,10 +57,8 @@ class FacesDataset(data.Dataset):
             ])
 
     def __getitem__(self, index):
-
         img_path = self.image_list[index]
         img = Image.open(img_path)
-        
         data = img.convert('RGB')
         data = self.transforms(data)
 
@@ -87,7 +85,8 @@ if __name__ == '__main__':
                       phase='train',
                       input_shape=(1, 128, 128))
 
-    trainloader = data.DataLoader(faces_dataset, batch_size=7)
+    trainloader = data.DataLoader(faces_dataset, batch_size=1,
+                                                shuffle=False, num_workers=1)
 
     image_count = 0
 
@@ -95,8 +94,8 @@ if __name__ == '__main__':
     for i, (data, label, names) in enumerate(trainloader):
 
         data, label = data.to(device), label.to(device)
-        print("\nbatch:" + str(i))
-        print("label: " + str(label))
+
+        print("names: " + str(names))
         print("names: " + str(names))
 
         ## SAVE Batch images to grid
@@ -104,20 +103,16 @@ if __name__ == '__main__':
         # i_n = 'out_images/' + str(i_n) + '.jpg'
         # torchvision.utils.save_image(data, i_n)
 
-        # bp()
-        for ind, (image) in enumerate(data):
-            img = data[ind].permute(1, 2, 0)
-            # img = np.transpose(img, (1, 2, 0))
+        for (ii, image) in enumerate(data):
 
-            ind_label = label[ind].detach().numpy()
-            image_to_display = img.detach().numpy() 
-            
-            name = names[ind]
-         
-            image_name = "label_" + str(name) + "_" + "batch_" + str(i) + "_image_" + str(ind)
+            img = image.permute(1, 2, 0).detach().numpy() # CHTO TO TUT NE TAK
+            img = img[:, :, [2, 1, 0]]
+
+            ind_label = label[ii].detach().numpy()
+            name = names[ii]
+            image_name = "label_" + str(name) + "_" + "batch_" + str(i) + "_image_" + str(ii)
             print("imageName: " + str(image_name))
-            write_to_image(image_name, image_to_display)
-            # bp()
+            write_to_image(image_name, img)
 
             image_count += 1
 
