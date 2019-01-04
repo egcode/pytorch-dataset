@@ -12,6 +12,7 @@ import dataset_helpers
 import cv2
 from pdb import set_trace as bp
 from skimage import io, transform
+import imageio
 
 class FacesDataset(data.Dataset):
 
@@ -102,13 +103,20 @@ if __name__ == '__main__':
         for (ii, image) in enumerate(data):
 
             img = image.permute(1, 2, 0).detach().numpy() 
-            img = img[:, :, [2, 1, 0]] #  OpenCV is in BGR mode
 
             ind_label = label[ii].detach().numpy()
             name = names[ii]
             image_name = "label_" + str(name) + "_" + "batch_" + str(i) + "_image_" + str(ii)
+            image_path = 'out_images/' + image_name + '.jpg'
             print("imageName: " + str(image_name))
-            cv2.imwrite('out_images/' + image_name + '.jpg', img*255.0)
+
+
+            # # OpenCV style saving
+            # cv2_image = img[:, :, [2, 1, 0]] #  OpenCV is in BGR mode
+            # cv2.imwrite(image_path, cv2_image*255.0)
+
+            # # imageio style saving
+            imageio.imwrite(image_path, (img * 255.).astype(np.uint8))
 
             image_count += 1
 
