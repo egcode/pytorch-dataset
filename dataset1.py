@@ -15,7 +15,8 @@ if __name__ == '__main__':
 
     data_transforms = {
         'train': transforms.Compose([
-            transforms.RandomResizedCrop(224),
+            transforms.RandomResizedCrop(256, scale=(0.7, 1.0)),
+            transforms.RandomRotation(10),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
@@ -70,7 +71,6 @@ if __name__ == '__main__':
         for ind, (image) in enumerate(data):
             img = image.permute(1, 2, 0).detach().numpy()
             ind_label = target[ind].detach().numpy()
-         
             image_name = "label_" + str(class_names[ind_label]) + "_batch_" + str(batch_idx) + "_image_" + str(ind)
             image_path = 'out_images/' + image_name + '.jpg'
             print("imageName: " + str(image_name))
