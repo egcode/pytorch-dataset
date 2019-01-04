@@ -1,5 +1,5 @@
 import os
-from PIL import Image, ExifTags
+from PIL import Image
 import torch
 from torch.utils import data
 import numpy as np
@@ -72,11 +72,6 @@ class FacesDataset(data.Dataset):
         return len(self.label_list)
 
 
-def write_to_image(name, array):
-    array = array*255.0
-    cv2.imwrite('out_images/' + name + '.jpg', array)
-
-
 if __name__ == '__main__':
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -112,7 +107,7 @@ if __name__ == '__main__':
             name = names[ii]
             image_name = "label_" + str(name) + "_" + "batch_" + str(i) + "_image_" + str(ii)
             print("imageName: " + str(image_name))
-            write_to_image(image_name, img)
+            cv2.imwrite('out_images/' + image_name + '.jpg', img*255.0)
 
             image_count += 1
 

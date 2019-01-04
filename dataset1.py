@@ -7,10 +7,8 @@ from torchvision import datasets, models, transforms
 import os
 import cv2
 from pdb import set_trace as bp
+from PIL import Image, ExifTags
 
-def write_to_image(name, array):
-    array = array*255.0
-    cv2.imwrite('out_images/' + name + '.jpg', array)
 
 if __name__ == '__main__':
 
@@ -77,7 +75,11 @@ if __name__ == '__main__':
             image_name = "label_" + str(class_names[ind_label]) + "_batch_" + str(batch_idx) + "_image_" + str(ind)
             print("imageName: " + str(image_name))
 
-            write_to_image(image_name, img)
+            cv2.imwrite('out_images/' + image_name + '.jpg', img*255.0)
+
+            # result = Image.fromarray((img * 255).astype(np.uint8))
+            # result.save('out_images/' + image_name + '.jpg')
+
             image_count += 1
 
     print("\nImages COUNT: " + str(image_count))
