@@ -9,9 +9,15 @@ import cv2
 from pdb import set_trace as bp
 from PIL import Image
 import imageio
+torch.set_printoptions(threshold=1000000)
+np.set_printoptions(threshold=1000000)
 
 
 if __name__ == '__main__':
+
+    # normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+    #                              std=[0.229, 0.224, 0.225])
+    normalize = transforms.Normalize(mean=[0.5], std=[0.5])
 
     data_transforms = {
         'train': transforms.Compose([
@@ -19,13 +25,13 @@ if __name__ == '__main__':
             transforms.RandomRotation(10),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            normalize
         ]),
         'val': transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            # normalize
         ]),
     }
 
@@ -74,7 +80,9 @@ if __name__ == '__main__':
             image_name = "label_" + str(class_names[ind_label]) + "_batch_" + str(batch_idx) + "_image_" + str(ind)
             image_path = 'out_images/' + image_name + '.jpg'
             print("imageName: " + str(image_name))
-
+            
+            # bp()
+            
             # # OpenCV style saving
             # cv2_image = img[:, :, [2, 1, 0]] #  OpenCV is in BGR mode
             # cv2.imwrite(image_path, cv2_image*255.0)
